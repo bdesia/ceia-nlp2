@@ -85,7 +85,7 @@ Then:
     ```bash
     poetry run streamlit run src/cv_streamlit_app.py
     ```
-*Video demostration:* [demos/](demos/)
+*Video demostration:* [demos/demo_tp2_CVanalyzer.mp4](demos/demo_tp2_CVanalyzer.mp4)
 
 
 **Challenge #3: to be defined**
