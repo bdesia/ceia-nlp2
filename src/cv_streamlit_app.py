@@ -10,7 +10,7 @@ TEMP_DIR = "temp/"
 EXPORT_DIR = "exports/"
 
 os.makedirs(TEMP_DIR, exist_ok=True)
-os.makedirs(EXPORT_DIR, exist_ok=True)  # ← Carpeta para exportar chats
+os.makedirs(EXPORT_DIR, exist_ok=True)
 
 # --- PDF & Text Processing ---
 def read_pdf(file_path: str) -> str:
