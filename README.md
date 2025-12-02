@@ -59,9 +59,11 @@ Implementation of a lightweight GPT-like model using Mixture of Experts (MoE) ar
 A question-answering bot over a collection of CVs using dense retrieval with Pinecone vector database.
 
 *Main features*
-- Document embedding with Sentence-Transformers (all-MiniLM-L6-v2).
+- Document embedding with **all-MiniLM-L6-v2** model via Sentence-Transformers .
 - Pinecone index creation and upsert.
 - Real-time semantic search with metadata filtering.
+- Answer generation powered by **llama-3.3-70b-versatile** model via Groq
+- Interactive **Streamlit** web app
 - Streamlit interface for interactive querying.
 
 *source code:*
@@ -69,6 +71,12 @@ A question-answering bot over a collection of CVs using dense retrieval with Pin
 - pinecone_registry.py
 
 *Run locally:* 
+First, create an environment file ".env" and add your keys:
+    ```bash
+    PINECONE_API_KEY = ´your_pinecone_api_key´
+    GROQ_API_KEY = ´your_groq_api_key´
+    ```
+Then:
     ```bash
     poetry run streamlit run src/cv_streamlit_app.py
     ```
@@ -76,3 +84,4 @@ A question-answering bot over a collection of CVs using dense retrieval with Pin
 **Challenge #3: to be defined**
 
 ...
+
