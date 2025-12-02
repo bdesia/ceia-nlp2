@@ -42,6 +42,8 @@ Follow this steps:
     ```
 1. Now, you're ready to run the notebooks and source code.
 
+## Challenges
+
 **Challenge #1: TinyGPT**
 
 Implementation of a lightweight GPT-like model using Mixture of Experts (MoE) architecture.
@@ -80,6 +82,8 @@ Then:
     ```bash
     poetry run streamlit run src/cv_streamlit_app.py
     ```
+*Video demostration:* in progreso...
+
 
 **Challenge #3: to be defined**
 
