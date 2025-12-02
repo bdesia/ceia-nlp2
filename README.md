@@ -59,11 +59,11 @@ Implementation of a lightweight GPT-like model using Mixture of Experts (MoE) ar
 A question-answering bot over a collection of CVs using dense retrieval with Pinecone vector database.
 
 *Main features*
-- Document embedding with **all-MiniLM-L6-v2** model via Sentence-Transformers .
+- Document embedding with **all-MiniLM-L6-v2** model via Sentence-Transformers.
 - Pinecone index creation and upsert.
 - Real-time semantic search with metadata filtering.
-- Answer generation powered by **llama-3.3-70b-versatile** model via Groq
-- Interactive **Streamlit** web app
+- Answer generation powered by **llama-3.3-70b-versatile** model via Groq.
+- Interactive **Streamlit** web app.
 - Streamlit interface for interactive querying.
 
 *source code:*
@@ -84,4 +84,5 @@ Then:
 **Challenge #3: to be defined**
 
 ...
+
 
