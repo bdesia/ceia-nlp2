@@ -78,8 +78,8 @@ A question-answering bot over a collection of CVs using dense retrieval with Pin
 *Run locally:* 
 First, create an environment file ".env" and add your keys:
     ```bash
-    PINECONE_API_KEY = ´your_pinecone_api_key´
-    GROQ_API_KEY = ´your_groq_api_key´
+    PINECONE_API_KEY = your_pinecone_api_key
+    GROQ_API_KEY = your_groq_api_key
     ```
 Then:
 
@@ -92,6 +92,7 @@ Then:
 **Challenge #3: to be defined**
 
 ...
+
 
 
 
