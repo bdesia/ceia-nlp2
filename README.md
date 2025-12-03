@@ -82,16 +82,17 @@ First, create an environment file ".env" and add your keys:
     GROQ_API_KEY = ´your_groq_api_key´
     ```
 Then:
+
     ```bash
     poetry run streamlit run src/cv_streamlit_app.py
     ```
 
 *Video demostration:* [demos/demo_tp2_CVanalyzer.mp4](demos/demo_tp2_CVanalyzer.mp4)
 
-
 **Challenge #3: to be defined**
 
 ...
+
 
 
 
