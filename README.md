@@ -88,8 +88,40 @@ Then:
 *Video demostration:* [demos/demo_tp2_CVanalyzer.mp4](demos/demo_tp2_CVanalyzer.mp4)
 
 
-**Challenge #3: to be defined**
+**Challenge #3: CV Multi-Agent System**
 
+A multi-agent question-answering system over a collection of CVs with intelligent routing per person and built-in comparison capabilities.
+
+**Main features**
+- Support for multiple CVs in a single vector database (one CV per individual).
+- Document embedding using **all-MiniLM-L6-v2** (Sentence-Transformers).
+- Pinecone serverless index (AWS us-east-1) with metadata filtering by person.
+- Automatic detection of person names in user queries (lightweight NER powered by LLM).
+- Multi-agent architecture:
+  - One specialized agent per person → answers using only that candidate’s CV.
+  - Supervisor agent that aggregates and compares responses when the query involves multiple people.
+- Answer generation powered by **llama-3.3-70b-versatile** via Groq.
+- Fully interactive Streamlit web app with persistent chat history.
+- Export chat as Markdown with one click.
+- Full support for comparative questions:
+  - “Who has more Python experience between John Doe and Jane Smith?”
+  - “Compare the academic background of Alice Johnson and Bob Lee”
+
+**Source code**
+- `cvagent_streamlit_app.py` → main app with multi-agent logic
+- `pinecone_registry.py` → enhanced wrapper with person-based metadata filtering. View class `pinecone_registry4agent.py`.
+
+*Run locally:* 
+First, create an environment file ".env" and add your keys:
+    ```bash
+    PINECONE_API_KEY = ´your_pinecone_api_key´
+    GROQ_API_KEY = ´your_groq_api_key´
+    ```
+Then:
+    ```bash
+    poetry run streamlit run src/cvagent_streamlit_app.py
+    ```
+*Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4)
 ...
 
 

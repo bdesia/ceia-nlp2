@@ -92,3 +92,67 @@ class PineconeRegistry:
                 retrieved_texts.append(match['metadata']['text'])
 
         return retrieved_texts
+
+import os
+import pinecone
+from sentence_transformers import SentenceTransformer
+import time
+
+
+class PineconeRegistry4agent:
+    @staticmethod
+    def create(index_name: str = "cv-rag-index",
+               embedding_model_name: str = "all-MiniLM-L6-v2"):
+        pc = pinecone.Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+        model = SentenceTransformer(embedding_model_name)
+
+        if index_name not in pc.list_indexes().names():
+            print(f"Creando índice '{index_name}'...")
+            pc.create_index(
+                name=index_name,
+                dimension=model.get_sentence_embedding_dimension(),
+                metric="cosine",
+                spec=pinecone.ServerlessSpec(cloud="aws", region="us-east-1")
+            )
+            while not pc.describe_index(index_name).status['ready']:
+                time.sleep(1)
+            print("Índice creado y listo.")
+
+        index = pc.Index(index_name)
+        return PineconeRegistry(index, model)
+
+    def __init__(self, pinecone_index, embedding_model):
+        self.index = pinecone_index
+        self.model = embedding_model
+
+    def populate(self, documents: list[str], person_name: str):
+        vectors = []
+        person_key = person_name.strip()
+        for i, doc in enumerate(documents):
+            embedding = self.model.encode(doc).tolist()
+            doc_id = f"{person_key.replace(' ', '_').lower()}-chunk-{i:06d}"
+            metadata = {
+                "person": person_key,
+                "text": doc.strip()
+            }
+            vectors.append((doc_id, embedding, metadata))
+
+        print(f"Subiendo {len(vectors)} fragmentos de {person_name} a Pinecone...")
+        for i in range(0, len(vectors), 100):
+            batch = vectors[i:i + 100]
+            self.index.upsert(vectors=batch)
+        print(f"CV de {person_name} cargado exitosamente.")
+
+    def query(self, query_text: str, top_k: int = 6, filter: dict = None) -> list[str]:
+        query_vec = self.model.encode(query_text).tolist()
+        result = self.index.query(
+            vector=query_vec,
+            top_k=top_k,
+            include_metadata=True,
+            filter=filter
+        )
+        texts = []
+        for match in result['matches']:
+            if 'text' in match['metadata']:
+                texts.append(match['metadata']['text'])
+        return texts
