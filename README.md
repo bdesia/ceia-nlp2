@@ -77,16 +77,17 @@ A question-answering bot over a collection of CVs using dense retrieval with Pin
 
 *Run locally:* 
 First, create an environment file ".env" and add your keys:
+
     ```bash
-    PINECONE_API_KEY = ´your_pinecone_api_key´
-    GROQ_API_KEY = ´your_groq_api_key´
+    PINECONE_API_KEY = your_pinecone_api_key
+    GROQ_API_KEY = your_groq_api_key
     ```
 Then:
+
     ```bash
     poetry run streamlit run src/cv_streamlit_app.py
     ```
 *Video demostration:* [demos/demo_tp2_CVanalyzer.mp4](demos/demo_tp2_CVanalyzer.mp4)
-
 
 **Challenge #3: CV Multi-Agent System**
 
@@ -121,7 +122,11 @@ Then:
     ```bash
     poetry run streamlit run src/cvagent_streamlit_app.py
     ```
-*Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4)
+<!-- *Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4) -->
 ...
+
+
+
+
 
 
