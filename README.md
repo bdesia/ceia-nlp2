@@ -114,16 +114,19 @@ A multi-agent question-answering system over a collection of CVs with intelligen
 
 *Run locally:* 
 First, create an environment file ".env" and add your keys:
+
     ```bash
     PINECONE_API_KEY = ´your_pinecone_api_key´
     GROQ_API_KEY = ´your_groq_api_key´
     ```
 Then:
+
     ```bash
     poetry run streamlit run src/cvagent_streamlit_app.py
     ```
 <!-- *Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4) -->
-...
+
+
 
 
 
