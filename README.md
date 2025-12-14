@@ -12,8 +12,8 @@ This repository contains different challenges solved during the course.
 The project was structured as follows. 
 
 ```
-├── data                                # Data. Here you can find cvs used for challenge 2.
-├── demos                               # Damostrations. Here you can find demostrations for challenge 2.
+├── data                                # Data. Here you can find cvs used for challenges 2 and 3.
+├── demos                               # Damostrations. Here you can find demostrations for challenges 2 and 3.
 ├── exports                             # Here you can find saved chats with CV consultant bot.
 ├── notebooks                           # Jupyter notebooks
 ├── src                                 # Main source of the project
