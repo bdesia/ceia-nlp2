@@ -2,7 +2,7 @@ import os
 import pinecone
 from sentence_transformers import SentenceTransformer
 import time
-
+import unicodedata
 
 class PineconeRegistry:
     """Handles creation, population, and querying of a Pinecone vector index."""
@@ -93,55 +93,79 @@ class PineconeRegistry:
 
         return retrieved_texts
 
-import os
-import pinecone
-from sentence_transformers import SentenceTransformer
-import time
 
+def ascii_safe_string(s: str) -> str:
+    """Convierte una cadena a ASCII puro, eliminando acentos y caracteres especiales."""
+    # Normaliza y elimina combining marks (acentos)
+    normalized = unicodedata.normalize('NFKD', s)
+    ascii_str = normalized.encode('ascii', 'ignore').decode('ascii')
+    # Reemplaza espacios y caracteres no válidos por underscore
+    return ''.join(c if c.isalnum() or c in '-_' else '_' for c in ascii_str).lower()
 
 class PineconeRegistry4agent:
     @staticmethod
-    def create(index_name: str = "cv-rag-index",
+    def create(index_name: str = "cv-rag-index-by-user",
                embedding_model_name: str = "all-MiniLM-L6-v2"):
-        pc = pinecone.Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-        model = SentenceTransformer(embedding_model_name)
+        if not os.getenv("PINECONE_API_KEY"):
+            raise ValueError("PINECONE_API_KEY no está configurada en las variables de entorno.")
 
-        if index_name not in pc.list_indexes().names():
-            print(f"Creando índice '{index_name}'...")
+        pc = pinecone.Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+        model = SentenceTransformer(embedding_model_name, device='cpu')
+
+        existing_indexes = [idx.name for idx in pc.list_indexes()]
+
+        if index_name not in existing_indexes:
+            print(f"Creando índice serverless '{index_name}'...")
             pc.create_index(
                 name=index_name,
                 dimension=model.get_sentence_embedding_dimension(),
                 metric="cosine",
                 spec=pinecone.ServerlessSpec(cloud="aws", region="us-east-1")
             )
-            while not pc.describe_index(index_name).status['ready']:
+
+            while index_name not in [idx.name for idx in pc.list_indexes()]:
                 time.sleep(1)
-            print("Índice creado y listo.")
+
+            print("Índice creado.")
+
+            while not pc.describe_index(index_name).status.get('ready', False):
+                time.sleep(1)
+
+            print("Índice listo para usar.")
 
         index = pc.Index(index_name)
-        return PineconeRegistry(index, model)
+        return PineconeRegistry4agent(index, model)
 
     def __init__(self, pinecone_index, embedding_model):
         self.index = pinecone_index
         self.model = embedding_model
 
     def populate(self, documents: list[str], person_name: str):
+        if not documents:
+            print(f"No hay documentos para cargar de {person_name}.")
+            return
+
         vectors = []
-        person_key = person_name.strip()
+        original_person_name = person_name.strip()  # Nombre con acentos para metadata y display
+
+        # Sanitizar para ID ASCII-safe
+        safe_person_name = ascii_safe_string(original_person_name)
+
         for i, doc in enumerate(documents):
             embedding = self.model.encode(doc).tolist()
-            doc_id = f"{person_key.replace(' ', '_').lower()}-chunk-{i:06d}"
+            doc_id = f"{safe_person_name}-chunk-{i:06d}"
             metadata = {
-                "person": person_key,
+                "person": original_person_name,  # Nombre original para filtros {"person": {"$eq": "Nicolás Craig"}}
                 "text": doc.strip()
             }
             vectors.append((doc_id, embedding, metadata))
 
-        print(f"Subiendo {len(vectors)} fragmentos de {person_name} a Pinecone...")
+        print(f"Subiendo {len(vectors)} fragmentos de '{original_person_name}' (ID base: {safe_person_name})...")
         for i in range(0, len(vectors), 100):
             batch = vectors[i:i + 100]
             self.index.upsert(vectors=batch)
-        print(f"CV de {person_name} cargado exitosamente.")
+
+        print(f"CV de '{original_person_name}' cargado exitosamente.")
 
     def query(self, query_text: str, top_k: int = 6, filter: dict = None) -> list[str]:
         query_vec = self.model.encode(query_text).tolist()
@@ -152,7 +176,7 @@ class PineconeRegistry4agent:
             filter=filter
         )
         texts = []
-        for match in result['matches']:
-            if 'text' in match['metadata']:
-                texts.append(match['metadata']['text'])
+        for match in result.matches:
+            if match.metadata and 'text' in match.metadata:
+                texts.append(match.metadata['text'])
         return texts
