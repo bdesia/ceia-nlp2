@@ -113,7 +113,11 @@ A multi-agent question-answering system over a collection of CVs with intelligen
 - `pinecone_registry.py` → enhanced wrapper with person-based metadata filtering. View class `pinecone_registry4agent.py`.
 
 *Run locally:* 
+<<<<<<< HEAD
 First, create an environment file ".env" and add your keys:
+=======
+First, create an environment file ".env" and add your keys (t):
+>>>>>>> c1a7020f3aac58fa55773f9fecd4068f502edb78
 
     ```bash
     PINECONE_API_KEY = ´your_pinecone_api_key´
@@ -121,11 +125,19 @@ First, create an environment file ".env" and add your keys:
     ```
     
 Then:
+
     ```bash
     poetry run streamlit run src/cvagent_streamlit_app.py
     ```
+<<<<<<< HEAD
 *Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4)
 ...
+=======
+<!-- *Video demostration:* [demos/demo_tp3_CVagent.mp4](demos/demo_tp3_CVagent.mp4) -->
+
+
+
+>>>>>>> c1a7020f3aac58fa55773f9fecd4068f502edb78
 
 
 
